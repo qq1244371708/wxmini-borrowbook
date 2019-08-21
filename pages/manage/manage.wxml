@@ -1,0 +1,42 @@
+<view class="layout">
+    <view class="entrance-check">
+
+        <view class="e-check-item" bindtap="openCamera" >
+            <view class="e-c-i-resouce" wx:if="{{tempFilePaths !== ''}}">
+                <image src="{{tempFilePaths + '?imageView2/0/q/30'}}" mode="aspectFit"></image>
+            </view>
+            <view class="e-c-i-icon icon-camera" wx:if="{{tempFilePaths === ''}}"></view>
+            <view class="e-c-i-text" wx:if="{{tempFilePaths === ''}}">
+                <text>点击此处拍摄要上传的图书</text>
+                <text>(正面清晰照为佳)</text>
+            </view>
+        </view>
+        <view class="e-check-item" wx:if="{{show}}" bindtap="change">
+            <view class="e-c-i-icon icon-doubt"></view>
+        </view>
+    </view>
+    <view class="page-body">
+        <view class="page-section">
+            <view class="weui-cells__title">书籍名</view>
+            <view class="weui-cells weui-cells_after-title">
+                <view class="weui-cell weui-cell_input">
+                    <input class="weui-input" bindinput="setBookName" placeholder="请输入书籍名"/>
+                </view>
+            </view>
+        </view>
+        <view class="page-section">
+            <view class="weui-cells__title">书本数量</view>
+            <view class="weui-cells weui-cells_after-title">
+                <view class="weui-cell weui-cell_input">
+                    <input class="weui-input" bindinput="setBookTotal" value="{{formData.bookTotal}}" type="number" placeholder="请填入书本的数量"/>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="btn-margin-top">
+        <button type="primary" form-type="submit" loading="{{btnLoading}}" bindtap="uploadBook">确认上传</button>
+    </view>
+    <view class="btn-margin-top">
+        <button type="warn" form-type="submit" bindtap="openCamera" wx:if="{{tempFilePaths !== ''}}">重新拍照</button>
+    </view>
+</view>

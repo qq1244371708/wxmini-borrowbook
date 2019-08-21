@@ -1,0 +1,40 @@
+<view class="layout">
+    <view class="entrance-check">
+
+        <view class="e-check-item" bindtap="openCamera">
+            <view class="e-c-i-img" wx:if="{{tempFilePaths !== ''}}">
+                <image src="{{tempFilePaths}}" mode="aspectFit"></image>
+            </view>
+            <view class="e-c-i-icon icon-camera" ></view>
+            <view class="e-c-i-text">
+                <text>点击此处拍摄你要借的图书</text>
+                <text>(正面清晰照为佳)</text>
+            </view>
+        </view>
+        <view class="e-check-item" bindtap="change">
+            <view class="e-c-i-resouce">
+                <image class="" src="{{formData.referenceImgUrl}}" bindload="bindloa" binderror="binderr" mode="aspectFit"></image>
+            </view>
+            <view class="e-c-i-bookname">
+                <view class="e-c-i-b-text">{{formData.referenceName}}</view>
+            </view>
+        </view>
+    </view>
+    <view class="btn-array">
+        <!--        <view class="b-a-text b-a-success">-->
+        <!--            相似度：{{formData.score}}，识别成功！-->
+        <!--        </view>-->
+        <view class="b-a-text b-a-fail" wx:if="{{failMsg !== ''}}">
+            {{failMsg}}
+        </view>
+        <view class="b-a-btn b-a-loading" wx:if="{{failMsg === ''}}">
+            等待识别
+        </view>
+        <view class="b-a-btn b-a-again" wx:if="{{failMsg !== ''}}" bindtap="openCamera">
+            结果错误，重新识别
+        </view>
+    </view>
+    <view>
+        {{aaaaa}}
+    </view>
+</view>

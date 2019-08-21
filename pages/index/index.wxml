@@ -1,0 +1,16 @@
+<view class="layout">
+    <view class="banner-top"></view>
+    <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">立即登录</button>
+    <view class="tip-title">
+        爱阅家内部图书借阅
+    </view>
+    <view class="tip-text">
+        <icon type="info" size="13" color="#4dcbca"/>
+        <text> 爱阅家图书借阅</text>
+    </view>
+    <view class="tip-text">
+        <icon type="info" size="13" color="#4dcbca"/>
+        <text> 仅供公司内部员工使用</text>
+    </view>
+
+</view>

@@ -1,0 +1,47 @@
+<view class="layout">
+    <view class="entrance-check">
+
+        <view class="e-check-item" bindtap="openCamera">
+            <view class="e-c-i-img" wx:if="{{tempFilePaths !== ''}}">
+                <image src="{{tempFilePaths + '?imageView2/0/q/30'}}" mode="aspectFit"></image>
+            </view>
+            <view class="e-c-i-icon icon-camera" wx:if="{{tempFilePaths === ''}}"></view>
+            <view class="e-c-i-text" wx:if="{{tempFilePaths === ''}}">
+                <text>点击此处拍摄你要借的图书</text>
+                <text>(正面清晰照为佳)</text>
+            </view>
+        </view>
+        <view class="e-check-item" wx:if="{{!formData.bookId}}" bindtap="change">
+            <view class="e-c-i-icon icon-doubt"></view>
+        </view>
+        <view class="e-check-item" wx:if="{{formData.bookId}}" bindtap="change">
+            <view class="e-c-i-resouce">
+                <image class="" src="{{formData.resourceImgUrl + '?imageView2/0/q/30'}}" mode="aspectFit"></image>
+            </view>
+            <view class="e-c-i-bookname">
+                <view class="e-c-i-b-text">{{formData.bookName}}</view>
+            </view>
+        </view>
+    </view>
+    <view>
+        {{abc}}
+    </view>
+    <view class="btn-array">
+        <view class="b-a-text b-a-success" wx:if="{{formData.score >= 0.5}}">
+            相似度：{{formData.score}}，识别成功！
+        </view>
+        <view class="b-a-text b-a-fail" wx:if="{{formData.score < 0.5 && formData.score !== 0}}">
+            相似度：{{formData.score}}，识别失败！
+        </view>
+        <view class="b-a-btn b-a-loading" wx:if="{{formData.score === 0}}">
+            等待识别
+        </view>
+        <view class="b-a-btn b-a-borrow" wx:if="{{formData.score >= 0.5}}" bindtap="confirmBorrowBook"
+              data-book-id="{{formData.bookId}}">
+            确认借书
+        </view>
+        <view class="b-a-btn b-a-again" wx:if="{{formData.score !== 0}}" bindtap="openCamera">
+            结果不准确，重新识别
+        </view>
+    </view>
+</view>

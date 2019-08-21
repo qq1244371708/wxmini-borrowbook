@@ -1,0 +1,49 @@
+<!--pages/home/home.wxml-->
+<view class="layout">
+    <view class="home-top-box">
+        <view class="h-t-b-inner">
+            <view class="head-img">
+                <view class="h-i-img">
+                    <open-data type="userAvatarUrl"></open-data>
+                </view>
+            </view>
+            <view class="head-greet">
+                <view class="h-g-title">
+                    <open-data type="userNickName"></open-data>
+                    {{greetings}}
+                </view>
+                <text class="h-g-title small">{{time}}</text>
+            </view>
+            <!--            <view class="logout-btn">-->
+            <!--                <text>退出登录</text>-->
+            <!--            </view>-->
+        </view>
+    </view>
+    <view class="entrance-check">
+        <view class="e-check-item" bindtap="redirectPage" data-url="../borrow/borrow">
+            <view class="e-c-i-label">我要借书</view>
+            <view class="e-c-i-svg e-c-i-svg-borrow"></view>
+        </view>
+        <view class="e-check-item" bindtap="redirectPage" data-url="../return/return">
+            <view class="e-c-i-label">我要还书</view>
+            <view class="e-c-i-svg e-c-i-svg-return"></view>
+        </view>
+        <view class="e-check-item" bindtap="redirectPage" data-url="../bookList/bookList">
+            <view class="e-c-i-label">图书列表</view>
+            <view class="e-c-i-svg e-c-i-svg-search"></view>
+        </view>
+        <view class="e-check-item" bindtap="redirectPage" data-url="../manage/manage">
+            <view class="e-c-i-label">管理图书</view>
+            <view class="e-c-i-svg e-c-i-svg-manage"></view>
+        </view>
+        <!--        <view class="e-check-item e-check-disable">-->
+        <!--            <view class="e-c-i-load">敬请期待</view>-->
+        <!--        </view>-->
+    </view>
+<!--    <view>-->
+        <!--        <button size="mini" bindtap="getLoginCode">获取login code</button>-->
+<!--        <button size="mini" bindtap="aaaaa">aaaa</button>-->
+<!--    </view>-->
+</view>
+
+
