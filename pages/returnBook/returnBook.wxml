@@ -7,7 +7,7 @@
             </view>
             <view class="e-c-i-icon icon-camera" ></view>
             <view class="e-c-i-text">
-                <text>点击此处拍摄你要借的图书</text>
+                <view>点击此处拍摄参照物</view>
                 <text>(正面清晰照为佳)</text>
             </view>
         </view>

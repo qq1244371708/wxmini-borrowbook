@@ -1,1 +1,149 @@
-/* pages/catalog/catalog.wxss */
+.catalog {
+    height: 100%;
+
+}
+
+.c-content{
+    height: calc(100% - 100rpx);
+    /*overflow: hidden;*/
+}
+
+.c-l{
+    height: 100%;
+    width: 200rpx;
+    background:rgba(250,250,250,1);
+    float: left;
+}
+
+.c-l-item{
+    width: 200rpx;
+    height: 110rpx;
+    font-size:28rpx;
+    font-weight:500;
+    color:rgba(102,102,102,1);
+    line-height:110rpx;
+    text-align: center;
+}
+
+.c-l-item.c-l-item_checked{
+    color: #0BA198;
+    background: #fff;
+}
+
+.c-r{
+    float: right;
+    width: 550rpx;
+    height: 100%;
+    overflow: scroll;
+    overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
+}
+
+.c-r-scroll_view{
+    height: 100%;
+}
+
+.c-r-section{
+
+}
+
+.c-r-label{
+    height: 75rpx;
+    font-size:30rpx;
+    font-family:PingFangSC;
+    font-weight:500;
+    color:rgba(51,51,51,1);
+    line-height:75rpx;
+    margin-left: 30rpx;
+}
+
+
+.c-r-s-content{
+    height: 220rpx;
+    padding: 20rpx 0;
+}
+
+.c-r-s-content>view{
+    float: left;
+}
+
+.c-r-s-c-img{
+    width: 185rpx;
+    height: 217rpx;
+    margin: 0 17rpx 0 20rpx;
+}
+
+.c-r-s-c-img>image{
+    width: 100%;
+    height: 100%;
+}
+
+.c-r-s-c-meesage{
+    width: 280rpx;
+    height: 217rpx;
+}
+
+.c-r-s-c-meesage .name{
+    height: 72rpx;
+    font-size:28rpx;
+    font-weight:400;
+    color:rgba(26,26,26,1);
+    line-height:36rpx;
+
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    margin: 45rpx 0 30rpx;
+
+}
+
+.c-r-s-c-meesage .label{
+    display: inline-block;
+    height:36rpx;
+    font-size: 24rpx;
+    padding: 0 20rpx;
+    color: #4dcbca;
+    border: 1px solid #4dcbca;
+    border-radius: 26rpx;
+    line-height: 36rpx;
+    text-align: center;
+}
+
+.hr{
+    background-color: #ebebeb;
+    height: 1px;
+    width: 85%;
+    margin: 0 auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

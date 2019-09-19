@@ -1,29 +1,69 @@
-// 获取accessToken
-function getAccessToken(callback) {
+const _api = require('./api.js');
 
-    console.log('sessionIdsessionId', wx.getStorageSync('sessionId'));
+
+// 查询是否有sessionId ，
+// 没有就调用myLogin获取sessionId
+// 有 ：先校验是否有效
+function getAccessToken(callback) {
 
     if (!wx.getStorageSync('sessionId')) {
         myLogin(callback);
     } else {
         wx.checkSession({
             success() {
-                console.log('session 有效');
+                console.log('session 有效~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
                 callback(wx.getStorageSync('sessionId'));
             },
             fail() {
-                console.log('seesion 失效');
+                console.log('seesion 失效~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
                 myLogin(callback);
             }
         })
     }
 }
 
+function myLogin(callback) {
+
+    wx.login({
+        success(res) {
+            console.log('getLoginCode', res);
+
+            wx.showLoading({
+                title: '登录中'
+            });
+            wx.request({
+                // url: 'https://www.easy-mock.com/mock/5d6ce0a9160de944c54a60e5/wechatMini/login',
+                // url: 'http://172.16.6.133:8080/resServer/bookLending/login',
+                url: `${_api.baseUrl}${_api.login}`,
+                data: {
+                    code: res.code
+                },
+                success(val) {
+                    wx.hideLoading();
+                    console.log('login', val);
+                    if (val.data.status === 0) {
+
+                        let accesstoken = val.data.data;
+                        if (typeof (callback) === 'function' && accesstoken) {
+                            wx.setStorageSync("sessionId", accesstoken.SESSION_ID);
+                            // wx.setStorageSync("sessionId", accesstoken);
+
+                            callback(accesstoken);
+                        }
+                    }
+                },
+                fail(err) {
+                    wx.hideLoading();
+                    wx.showToast({title: '登录失败', icon: 'none'})
+                }
+            });
+        }
+    })
+}
+
+
 // 封装request请求
 const myRequest = options => {
-
-    console.log('c');
-
 
     if (options) {
         getAccessToken(function (accesstoken) {
@@ -51,6 +91,11 @@ const myRequest = options => {
                         }
                     } else if (res.statusCode === 404) {
                         console.log('404');
+                    } else if (res.statusCode === 30003) {
+                        wx.showToast({
+                            title: '请先绑定邮箱',
+                            icon: 'none'
+                        })
                     }
                 }
             }
@@ -61,44 +106,6 @@ const myRequest = options => {
 }
 
 
-function myLogin(callback) {
-
-    wx.login({
-        success(res) {
-            console.log('getLoginCode', res);
-
-            wx.showLoading({
-                title: '登录中'
-            });
-            wx.request({
-                url: 'https://testdatacenter.aiwanshu.com/resServer/bookLending/login',
-                data: {
-                    code: res.code
-                },
-                success(val) {
-                    wx.hideLoading();
-                    console.log('bookLending11 login', val);
-                    if (val.data.status === 0) {
-
-                        let accesstoken = val.data.data;
-                        if (typeof (callback) === 'function' && accesstoken) {
-                            wx.setStorageSync("sessionId", accesstoken);
-
-                            callback(accesstoken);
-                        }
-                    }
-                },
-                fail(err) {
-                    wx.hideLoading();
-                    wx.showToast({title: '登录失败', icon: 'none'})
-                }
-            })
-        }
-    })
-
-}
-
-
 module.exports = {
     myRequest: myRequest
-}
+};

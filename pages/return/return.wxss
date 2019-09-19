@@ -75,7 +75,7 @@
     font-size:28rpx;
     font-weight:400;
     color:rgba(51,51,51,1);
-    height: 85rpx;
+    height: 83rpx;
 
     word-break: break-all;
     display: -webkit-box;

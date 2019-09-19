@@ -1,9 +1,9 @@
 <view class="layout">
     <view class="entrance-check">
 
-        <view class="e-check-item" bindtap="openCamera" >
+        <view class="e-check-item" bindtap="openCamera">
             <view class="e-c-i-resouce" wx:if="{{tempFilePaths !== ''}}">
-                <image src="{{tempFilePaths + '?imageView2/0/q/30'}}" mode="aspectFit"></image>
+                <image src="{{tempFilePaths}}" mode="aspectFit"></image>
             </view>
             <view class="e-c-i-icon icon-camera" wx:if="{{tempFilePaths === ''}}"></view>
             <view class="e-c-i-text" wx:if="{{tempFilePaths === ''}}">
@@ -24,19 +24,39 @@
                 </view>
             </view>
         </view>
+        <!--        <view class="page-section">-->
+        <!--            <view class="weui-cells__title">书本数量</view>-->
+        <!--            <view class="weui-cells weui-cells_after-title">-->
+        <!--                <view class="weui-cell weui-cell_input">-->
+        <!--                    <input class="weui-input" bindinput="setBookTotal" value="{{formData.bookTotal}}" type="number" placeholder="请填入书本的数量"/>-->
+        <!--                </view>-->
+        <!--            </view>-->
+        <!--        </view>-->
         <view class="page-section">
-            <view class="weui-cells__title">书本数量</view>
-            <view class="weui-cells weui-cells_after-title">
-                <view class="weui-cell weui-cell_input">
-                    <input class="weui-input" bindinput="setBookTotal" value="{{formData.bookTotal}}" type="number" placeholder="请填入书本的数量"/>
+            <view class="weui-cells__title">书籍标签</view>
+            <view class="p-s-label">
+                <view class="p-s-label-item {{item.checked ? 'p-s-label-item_checked' : ''}}" bindtap="radioChange" data-book-tag="{{item.name}}" wx:for="{{labelList}}" wx:key="item.name">
+                    {{item.name}}
                 </view>
             </view>
         </view>
+
+<!--        <view class="page-section">-->
+<!--            <view class="weui-cells__title">书籍标签</view>-->
+<!--            <view class="">-->
+<!--                <radio-group class="radio-group" bindchange="radioChange">-->
+<!--                    <label class="radio my-radio" wx:for="{{labelList}}" wx:key="item.name">-->
+<!--                        <radio value="{{item.name}}" checked="{{item.checked}}"/>-->
+<!--                        {{item.name}}-->
+<!--                    </label>-->
+<!--                </radio-group>-->
+<!--            </view>-->
+<!--        </view>-->
     </view>
     <view class="btn-margin-top">
-        <button type="primary" form-type="submit" loading="{{btnLoading}}" bindtap="uploadBook">确认上传</button>
+        <button type="primary" class="my-blue-btn"  form-type="submit" loading="{{btnLoading}}" bindtap="uploadBook">上传图书</button>
     </view>
-    <view class="btn-margin-top">
-        <button type="warn" form-type="submit" bindtap="openCamera" wx:if="{{tempFilePaths !== ''}}">重新拍照</button>
-    </view>
+    <!--    <view class="btn-margin-top">-->
+    <!--        <button type="warn" form-type="submit" bindtap="openCamera" wx:if="{{tempFilePaths !== ''}}">重新拍照</button>-->
+    <!--    </view>-->
 </view>

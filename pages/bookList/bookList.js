@@ -1,6 +1,7 @@
 const ajax = require('../../utils/request.js');
 
-// pages/bookList/bookList.js
+let _app = getApp();
+
 Page({
 
     /**
@@ -24,7 +25,12 @@ Page({
             title: '正在加载~',
         });
 
-        this.getQniuDomain();
+        this.setData({
+            qiniuDomain:wx.getStorageSync('qiniuDomain')
+        })
+
+
+
         this.getBookList();
     },
 
@@ -75,29 +81,11 @@ Page({
      */
     onShareAppMessage: function () {
     },
-
-    getQniuDomain() {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getImgDomain",
-            success: res => {
-                console.log('getImgDomain~', res);
-                if (res.data.status === 0) {
-                    this.setData({
-                        qiniuDomain: res.data.data
-                    })
-                }
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQniuDomain fail'
-                })
-            }
-        })
-    },
     getBookList(pageNum = 1, pageSize = 10) {//pageNum pageSize
 
         ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/bookLending/bookList",
+            // url: `http://172.16.6.133:8080/resServer/bookLending/bookList`,
+            url: `${_app.globalData.host}${_app.globalData.api.bookList}`,
             data: {
                 pageNum,
                 pageSize
@@ -114,11 +102,13 @@ Page({
 
                     this.setData({
                         bookList: this.data.bookList.concat(res.data.data.list),
-                        pageNumber: res.data.data.pageNumber,
-                        pageSize: res.data.data.pageSize,
-                        totalRow: res.data.data.totalRow,
                         lastPage: res.data.data.lastPage
                     });
+
+                    this.data.pageNumber = res.data.data.pageNumber;
+                    this.data.pageSize = res.data.data.pageSize;
+                    this.data.totalRow = res.data.data.totalRow;
+
                 } else {
                     wx.showToast({
                         title: res.data.msg,

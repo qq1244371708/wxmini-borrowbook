@@ -1,7 +1,7 @@
 <view class="layout">
     <view class="r-title">
         <text>读万卷书行万里路</text>
-        <view class="r-title-r">借阅历史</view>
+<!--        <view class="r-title-r">借阅历史</view>-->
     </view>
     <view class="r-label">
         借阅历史

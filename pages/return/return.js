@@ -1,7 +1,7 @@
 const ajax = require('../../utils/request.js');
 
+let _app = getApp();
 
-// pages/return/return.js
 Page({
 
     /**
@@ -22,7 +22,11 @@ Page({
         wx.showLoading({
             title: '正在加载~',
         });
-        this.getQniuDomain();
+
+        this.setData({
+            qiniuDomain: wx.getStorageSync('qiniuDomain')
+        })
+
         this.getMyLendingBook();
     },
     /**
@@ -36,8 +40,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function () {
-
-
+        this.getMyLendingBook();
     },
 
     /**
@@ -73,29 +76,15 @@ Page({
      */
     onShareAppMessage: function () {
     },
-    getQniuDomain() {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getImgDomain",
-            success: res => {
-                console.log('getImgDomain', res);
-                this.setData({
-                    qiniuDomain: res.data.data
-                })
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQniuDomain fail'
-                })
-            }
-        })
-    },
     getMyLendingBook(pageNum = 1, pageSize = 10) {
 
         wx.showLoading({
             title: '正在加载~',
         });
         ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/bookLending/myLendingBook",
+            // url: "http://172.16.6.133:8080/resServer/bookLending/myLendingBook",
+            url: `${_app.globalData.host}${_app.globalData.api.myLendingBook}`,
+
             data: {
                 pageNum,
                 pageSize
@@ -113,11 +102,13 @@ Page({
                     console.log('bookList', bookList);
                     this.setData({
                         dataList: bookList,
-                        pageNumber: res.data.data.pageNumber,
-                        pageSize: res.data.data.pageSize,
-                        totalRow: res.data.data.totalRow,
                         lastPage: res.data.data.lastPage
                     })
+
+                    this.data.pageNumber = res.data.data.pageNumber;
+                    this.data.pageSize = res.data.data.pageSize;
+                    this.data.totalRow = res.data.data.totalRow;
+
                 } else {
 
                 }

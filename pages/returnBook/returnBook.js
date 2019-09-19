@@ -1,7 +1,7 @@
-// pages/borrow/borrow.js
 const qiniuUploader = require("../../static/js/qiniuUploader.js");
 const ajax = require('../../utils/request.js');
 
+let _app = getApp();
 
 Page({
     /**
@@ -29,18 +29,15 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+
+        this.data.formData.lendingId = options.lendingId;
+
         this.setData({
-            'formData.lendingId': options.lendingId
-        });
-        this.getQniuDomain();
-        this.getQiniuToken();
+            qiniuDomain: wx.getStorageSync('qiniuDomain'),
+            qiniuToken: wx.getStorageSync('qiniuToken')
+        })
 
-
-        // setTimeout(() => {
-        //     this.setData({
-        //         'formData.referenceImgUrl': 'http://pic26.nipic.com/20121221/9252150_142515375000_2.jpg'
-        //     })
-        // }, 2000)
+        this.goFindReference();
 
     },
     /**
@@ -85,7 +82,9 @@ Page({
     },
     goFindReference() {
         ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/bookLending/findReference",
+            // url: "http://172.16.6.133:8080/resServer/bookLending/findReference",
+            url: `${_app.globalData.host}${_app.globalData.api.findReference}`,
+
             success: res => {
                 console.log('goFindReference', res);
 
@@ -104,42 +103,7 @@ Page({
             }
         })
     },
-    getQniuDomain() {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getImgDomain",
-            success: res => {
-                console.log('getImgDomain', res);
-                this.setData({
-                    qiniuDomain: res.data.data
-                })
 
-                //做图片匹配
-                this.goFindReference();
-
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQniuDomain fail'
-                })
-            }
-        })
-    },
-    getQiniuToken: function () {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getUploadToken",
-            success: res => {
-                console.log('getQiniuToken', res);
-                this.setData({
-                    qiniuToken: res.data.data
-                })
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQiniuToken fail'
-                })
-            }
-        })
-    },
     openCamera: function () {
         wx.chooseImage({
             count: 1,
@@ -177,7 +141,7 @@ Page({
                 'formData.imgKey': res.key
             });
             wx.showLoading({
-                title: '正在匹配图书~',
+                title: '正在匹配~',
             });
             this.returnBook();
 
@@ -185,7 +149,7 @@ Page({
             console.log('error:', error);
         }, {
             uploadURL: 'https://up.qiniup.com',
-            domain: 'http://resourcetest.aiwanshu.com/', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
+            domain: _that.data.qiniuDomain, // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
             key: `mini-borrowbook-${new Date().getTime()}.${tempFilePath.split('.')[tempFilePath.split('.').length - 1]}`, // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
             // 以下方法三选一即可，优先级为：uptoken > uptokenURL > uptokenFunc
             uptoken: _that.data.qiniuToken, // 由其他程序生成七牛 uptoken
@@ -210,7 +174,9 @@ Page({
         let _that = this;
 
         ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/bookLending/returnBook",
+            // url: "http://172.16.6.133:8080/resServer/bookLending/returnBook",
+            url: `${_app.globalData.host}${_app.globalData.api.returnBook}`,
+
             header: {
                 'content-type': 'application/x-www-form-urlencoded'
             },
@@ -234,11 +200,14 @@ Page({
                     });
                     setTimeout(function () {
                         wx.navigateBack({
-                            url: '../return/return',
+                            // url: '../return/return',
+                            delta: 1,
                             success: res => {
                                 console.log('this', _that);
                                 // _that.onLoad();
-                                getCurrentPages()[getCurrentPages().length - 2].onLoad();
+                                // let pages = getCurrentPages();
+                                // pages[pages.length - 2].onLoad();
+
                             }
                         })
                     }, 1000)

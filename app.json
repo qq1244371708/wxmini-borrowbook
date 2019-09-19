@@ -1,13 +1,17 @@
 {
   "pages": [
-    "pages/home/home",
     "pages/index/index",
+    "pages/catalog/catalog",
+    "pages/manage/manage",
+    "pages/bindEmail/bindEmail",
+    "pages/borrow/borrow",
+    "pages/home/home",
     "pages/bookList/bookList",
     "pages/returnBook/returnBook",
     "pages/return/return",
-    "pages/manage/manage",
-    "pages/borrow/borrow",
-    "pages/logs/logs"
+    "components/searchbar/searchbar",
+    "components/cell/cell",
+    "components/cells/cells"
   ],
   "window": {
     "backgroundTextStyle": "light",

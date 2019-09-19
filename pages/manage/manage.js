@@ -1,6 +1,7 @@
 const qiniuUploader = require("../../static/js/qiniuUploader.js");
 const ajax = require('../../utils/request.js');
 
+let _app = getApp();
 
 Page({
     /**
@@ -14,22 +15,34 @@ Page({
         formData: {
             bookName: '',
             bookImgKey: '',
-            bookTotal: ''
+            bookTotal: 999,
+            bookTags: ''
             // bookIntroduce: '',
             // bookTags: '',
             // bookAuthor: '',
             // bookType: '',
             // bookTotal: ''
         },
-        btnLoading: false
+        btnLoading: false,
+        labelList: [
+            {name: '语言类', checked: false},
+            {name: '数学类', checked: false},
+            {name: '百科类', checked: false},
+            {name: '工艺书', checked: false},
+            {name: '立体书', checked: false},
+            {name: '玩书类', checked: false},
+            {name: '工具书', checked: false}]
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        this.getQniuDomain();
-        this.getQiniuToken();
+        this.setData({
+            qiniuDomain: wx.getStorageSync('qiniuDomain'),
+            qiniuToken: wx.getStorageSync('qiniuToken')
+
+        })
     },
 
     /**
@@ -109,42 +122,27 @@ Page({
             'formData.bookName': e.detail.value
         })
     },
-    getQniuDomain() {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getImgDomain",
-            success: res => {
-                console.log('getImgDomain', res);
-                if (res.data.status === 0) {
-                    this.setData({
-                        qiniuDomain: res.data.data
-                    })
-                }
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQniuDomain fail'
-                })
-            }
-        })
-    },
-    getQiniuToken: function () {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getUploadToken",
-            success: res => {
-                console.log('getQiniuToken', res);
-                if (res.data.status === 0) {
 
-                    this.setData({
-                        qiniuToken: res.data.data
-                    })
-                }
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQiniuToken fail'
-                })
+    radioChange: function (e) {
+        let labelListTemp = JSON.parse(JSON.stringify(this.data.labelList));
+        let temp = e.currentTarget.dataset.bookTag;
+
+        labelListTemp = labelListTemp.map((item) => {
+
+            if (item.name === temp) {
+                item.checked = true;
+            } else {
+                item.checked = false;
             }
+            return item;
+        });
+
+        this.setData({
+            'formData.bookTags': temp,
+            labelList: labelListTemp
         })
+
+
     },
     openCamera: function () {
         wx.chooseImage({
@@ -179,14 +177,14 @@ Page({
             //    "key": "gogopher.jpg"
             //  }
             _that.setData({
-                tempFilePaths: `${res.imageURL}`,
+                tempFilePaths: `${res.imageURL}?imageView2/0/q/30`,
                 'formData.bookImgKey': res.key
             });
         }, (error) => {
             console.log('error:', error);
         }, {
             uploadURL: 'https://up.qiniup.com',
-            domain: 'http://resourcetest.aiwanshu.com/', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
+            domain: _that.data.qiniuDomain, // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
             key: `mini-borrowbook-${new Date().getTime()}.${tempFilePath.split('.')[tempFilePath.split('.').length - 1]}`, // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
             // 以下方法三选一即可，优先级为：uptoken > uptokenURL > uptokenFunc
             uptoken: _that.data.qiniuToken, // 由其他程序生成七牛 uptoken
@@ -227,10 +225,14 @@ Page({
                 icon: 'none'
             });
             return false;
-        } else {
-
         }
-
+        if (this.data.formData.bookTags === '') {
+            wx.showToast({
+                title: '请选择书籍标签',
+                icon: 'none'
+            });
+            return false;
+        }
 
         this.setData({
             btnLoading: true
@@ -239,11 +241,14 @@ Page({
             title: '正在上传',
         });
         ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/bookLending/uploadBook",
+            // url: "http://172.16.6.133:8080/resServer/bookLending/uploadBook",
+            url: `${_app.globalData.host}${_app.globalData.api.uploadBook}`,
+
             data: {
                 bookName: this.data.formData.bookName,
                 bookImgKey: this.data.formData.bookImgKey,
-                bookTotal: this.data.formData.bookTotal
+                bookTotal: 999,
+                bookTags: this.data.formData.bookTags
             },
             success: res => {
                 wx.hideLoading();

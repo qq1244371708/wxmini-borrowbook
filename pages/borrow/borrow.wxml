@@ -11,37 +11,56 @@
                 <text>(正面清晰照为佳)</text>
             </view>
         </view>
-        <view class="e-check-item" wx:if="{{!formData.bookId}}" bindtap="change">
-            <view class="e-c-i-icon icon-doubt"></view>
+        <!--        <view class="e-check-item" wx:if="{{!formData.bookId}}" bindtap="change">-->
+        <!--            <view class="e-c-i-icon icon-doubt"></view>-->
+        <!--        </view>-->
+        <!--        <view class="e-check-item" wx:if="{{formData.bookId}}" bindtap="change">-->
+        <!--            <view class="e-c-i-resouce">-->
+        <!--                <image class="" src="{{formData.resourceImgUrl + '?imageView2/0/q/30'}}" mode="aspectFit"></image>-->
+        <!--            </view>-->
+        <!--            <view class="e-c-i-bookname">-->
+        <!--                <view class="e-c-i-b-text">{{formData.bookName}}</view>-->
+        <!--            </view>-->
+        <!--        </view>-->
+    </view>
+    <view wx:if="{{dataList.length > 0 && validCount > 0}}">
+        <view class="r-label">
+            相似图书
         </view>
-        <view class="e-check-item" wx:if="{{formData.bookId}}" bindtap="change">
-            <view class="e-c-i-resouce">
-                <image class="" src="{{formData.resourceImgUrl + '?imageView2/0/q/30'}}" mode="aspectFit"></image>
+        <view class="r-list">
+            <view class="r-l-item" wx:for="{{dataList}}" wx:key="item.brief.bookId" wx:if="{{index < 3 && item.score >= 50}}">
+                <view class="r-l-i-img">
+                    <image src="{{qiniuDomain + item.brief.bookImgKey + '?imageView2/0/q/30'}}" mode="aspectFit"></image>
+                </view>
+                <view class="r-l-i-msg">
+                    <view class="r-l-i-name">{{item.brief.bookName}}</view>
+                    <view class="r-l-i-name">相似度：{{item.score}}%</view>
+                    <view class="r-l-i-b-btn" bindtap="confirmBorrowBook" data-book-id="{{item.brief.bookId}}">我要借书</view>
+                </view>
             </view>
-            <view class="e-c-i-bookname">
-                <view class="e-c-i-b-text">{{formData.bookName}}</view>
-            </view>
         </view>
     </view>
-    <view>
-        {{abc}}
-    </view>
-    <view class="btn-array">
-        <view class="b-a-text b-a-success" wx:if="{{formData.score >= 0.5}}">
-            相似度：{{formData.score}}，识别成功！
-        </view>
-        <view class="b-a-text b-a-fail" wx:if="{{formData.score < 0.5 && formData.score !== 0}}">
-            相似度：{{formData.score}}，识别失败！
-        </view>
-        <view class="b-a-btn b-a-loading" wx:if="{{formData.score === 0}}">
-            等待识别
-        </view>
-        <view class="b-a-btn b-a-borrow" wx:if="{{formData.score >= 0.5}}" bindtap="confirmBorrowBook"
-              data-book-id="{{formData.bookId}}">
-            确认借书
-        </view>
-        <view class="b-a-btn b-a-again" wx:if="{{formData.score !== 0}}" bindtap="openCamera">
-            结果不准确，重新识别
+    <view class="btn-array" wx:if="{{validCount <= 0}}">
+        <view class="b-a-btn b-a-again" bindtap="openCamera">
+            无相似图书，重新识别
         </view>
     </view>
+    <!--    <view class="btn-array" wx:if="{{dataList.length == 0}}">-->
+    <!--        <view class="b-a-text b-a-success" wx:if="{{formData.score >= 0.5}}">-->
+    <!--            相似度：{{formData.score}}，识别成功！-->
+    <!--        </view>-->
+    <!--        <view class="b-a-text b-a-fail" wx:if="{{formData.score < 0.5 && formData.score !== 0}}">-->
+    <!--            相似度：{{formData.score}}，识别失败！-->
+    <!--        </view>-->
+    <!--        <view class="b-a-btn b-a-loading" wx:if="{{formData.score === 0}}">-->
+    <!--            等待识别-->
+    <!--        </view>-->
+    <!--        <view class="b-a-btn b-a-borrow" wx:if="{{formData.score >= 0.5}}" bindtap="confirmBorrowBook"-->
+    <!--              data-book-id="{{formData.bookId}}">-->
+    <!--            确认借书-->
+    <!--        </view>-->
+    <!--        <view class="b-a-btn b-a-again" wx:if="{{formData.score !== 0}}" bindtap="openCamera">-->
+    <!--            结果不准确，重新识别-->
+    <!--        </view>-->
+    <!--    </view>-->
 </view>

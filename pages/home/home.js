@@ -1,6 +1,8 @@
 const ajax = require('../../utils/request.js');
+const tools = require('../../utils/util.js');
 
-// pages/home/home.js
+let _app = getApp();
+
 Page({
 
     /**
@@ -17,8 +19,7 @@ Page({
      */
     onLoad: function (options) {
         this.checkAuth();
-        this.getUserInfo();
-
+        this.getUserTime();
     },
 
     /**
@@ -80,20 +81,7 @@ Page({
             }
         })
     },
-    gogogo: function () {
-        wx.showModal({
-            title: '提示',
-            content: '还没做，点什么点！',
-            success(res) {
-                if (res.confirm) {
-                    console.log('用户点击确定')
-                } else if (res.cancel) {
-                    console.log('用户点击取消')
-                }
-            }
-        })
-    },
-    getUserInfo() {
+    getUserTime() {
         let time = new Date();
         let timeStr = `${time.getMonth() + 1}月${time.getDate()}日 周${time.getDay() === 1 ? '一' : time.getDay() === 2 ? '二' : time.getDay() === 3 ? '三' : time.getDay() === 4 ? '四' : time.getDay() === 5 ? '五' : time.getDay() === 6 ? '六' : '日'}`;
 
@@ -115,46 +103,38 @@ Page({
             greetings: greetingsStr
         })
     },
-    getLoginCode() {
-
-        wx.login({
-            success(res) {
-                console.log('getLoginCode', res);
-
-                ajax.myRequest({
-                    url: 'https://testdatacenter.aiwanshu.com/resServer/bookLending/login',
-                    data: {
-                        code: res.code
-                    },
-                    success(val) {
-                        console.log('bookLending login', val)
-                    }
-                })
-            }
-        })
-    },
+    // getLoginCode() {
+    //
+    //     wx.login({
+    //         success(res) {
+    //             console.log('getLoginCode', res);
+    //
+    //             ajax.myRequest({
+    //                 // url: 'http://172.16.6.133:8080/resServer/bookLending/login',
+    //                 url: `${_app.globalData.host}${_app.globalData.api.login}`,
+    //
+    //                 data: {
+    //                     code: res.code
+    //                 },
+    //                 success(val) {
+    //                     console.log('bookLending login', val)
+    //                 }
+    //             })
+    //         }
+    //     })
+    // },
     checkAuth() {
 
         wx.getSetting({
             success(res) {
                 if (!res.authSetting['scope.userInfo']) {
-                    wx.reLaunch({
-                        url: '../index/index'
-                    })
+                    // wx.reLaunch({
+                    //     url: '../index/index'
+                    // })
                 }
             },
             fail() {
             }
         })
-    },
-    aaaaa() {
-        ajax.myRequest({
-            url: 'https://testdatacenter.aiwanshu.com/resServer/common/getImgDomain',
-            method: 'POST',
-            success: res => {
-                console.log('成功！！！！！！！', res)
-            }
-        })
     }
-
 });

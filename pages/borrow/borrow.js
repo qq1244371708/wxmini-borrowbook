@@ -1,8 +1,7 @@
 const ajax = require('../../utils/request.js');
-
-
-// pages/borrow/borrow.js
 const qiniuUploader = require("../../static/js/qiniuUploader.js");
+
+let _app = getApp();
 
 Page({
     /**
@@ -19,6 +18,8 @@ Page({
             resourceImgUrl: '',
             score: 0
         },
+        validCount: 999,
+        dataList: null,
         btnDisabled: false,
         abc: ''
     },
@@ -27,8 +28,11 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        this.getQiniuToken();
-        this.getQniuDomain();
+        this.setData({
+            qiniuDomain: wx.getStorageSync('qiniuDomain'),
+            qiniuToken: wx.getStorageSync('qiniuToken')
+        })
+
     },
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -70,59 +74,27 @@ Page({
             show: !this.data.show
         })
     },
-    getQniuDomain() {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getImgDomain",
-            success: res => {
-                console.log('getImgDomain', res);
-                this.setData({
-                    qiniuDomain: res.data.data
-                })
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQniuDomain fail'
-                })
-            }
-        })
-    },
-    getQiniuToken: function () {
-        ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/common/getUploadToken",
-            success: res => {
-                console.log('getQiniuToken', res);
-                this.setData({
-                    qiniuToken: res.data.data
-                })
-            },
-            fial: err => {
-                wx.showToast({
-                    title: 'getQiniuToken fail'
-                })
-            }
-        })
-    },
+
     openCamera: function () {
         wx.chooseImage({
             count: 1,
             sizeType: ['compressed'],// ['original', 'compressed'] 原片、压缩
             sourceType: ['camera'],//['album', 'camera'] 相册、相机
             success: res => {
-                console.log(res);
+                console.log('chooseImage', res);
                 // this.setData({
                 //     tempFilePaths: res.tempFilePaths[0],
                 // });
-
-                this.setData({
-                    abc: res.data
-                })
 
                 let tempFilePaths = res.tempFilePaths[0];
                 this.uploadQiniu(tempFilePaths);
             },
             fail: err => {
-                this.setData({
-                    abc: err.message
+                wx.showToast({
+                    title: '选择照片失败',
+                    image: '../../static/img/warn.svg',
+                    icon: 'none'
+
                 })
             }
 
@@ -134,7 +106,6 @@ Page({
         wx.showLoading({
             title: '上传中,请稍等~',
         });
-
         qiniuUploader.upload(tempFilePath, (res) => {
             wx.hideLoading();
             console.log('上传成功', res);
@@ -148,7 +119,7 @@ Page({
                 tempFilePaths: `${res.imageURL}`,
             });
             wx.showLoading({
-                title: '正在匹配图书~',
+                title: '正在匹配~',
             });
             this.goBookSearch(res.key);
 
@@ -156,7 +127,7 @@ Page({
             console.log('error:', error);
         }, {
             uploadURL: 'https://up.qiniup.com',
-            domain: 'http://resourcetest.aiwanshu.com/', // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
+            domain: _that.data.qiniuDomain, // // bucket 域名，下载资源时用到。如果设置，会在 success callback 的 res 参数加上可以直接使用的 ImageURL 字段。否则需要自己拼接
             key: `mini-borrowbook-${new Date().getTime()}.${tempFilePath.split('.')[tempFilePath.split('.').length - 1]}`, // [非必须]自定义文件 key。如果不设置，默认为使用微信小程序 API 的临时文件名
             // 以下方法三选一即可，优先级为：uptoken > uptokenURL > uptokenFunc
             uptoken: _that.data.qiniuToken, // 由其他程序生成七牛 uptoken
@@ -179,7 +150,8 @@ Page({
     goBookSearch(imgKey) {//以图识图
 
         ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/bookLending/bookSearch",
+            // url: "http://172.16.6.133:8080/resServer/bookLending/bookSearch",
+            url: `${_app.globalData.host}${_app.globalData.api.bookSearch}`,
             header: {
                 'content-type': 'application/x-www-form-urlencoded'
             },
@@ -192,19 +164,25 @@ Page({
                 wx.hideLoading();
 
                 if (res.data.status === 0) {
-                    if (res.data.data.score >= 0.5) {
-                        let brief = JSON.parse(res.data.data.brief);
-                        this.setData({
-                            'formData.bookId': brief.bookId,
-                            'formData.bookName': brief.bookName,
-                            'formData.resourceImgUrl': `${this.data.qiniuDomain}${brief.bookImgKey}`,
-                            'formData.score': res.data.data.score
-                        });
-                    } else {
-                        this.setData({
-                            'formData.score': res.data.data.score
-                        });
-                    }
+
+                    let dataParse = res.data.data;
+
+                    let count = dataParse.length;
+
+                    dataParse.map((temp) => {
+                        temp.brief = JSON.parse(temp.brief);
+                        temp.score = (temp.score * 100).toFixed(2);
+                        if (temp.score < 50) {
+                            count--;
+                        }
+                    });
+
+                    this.setData({
+                        dataList: res.data.data,
+                        validCount: count
+
+                    })
+
                 }
             }
         })
@@ -219,7 +197,8 @@ Page({
         });
 
         ajax.myRequest({
-            url: "https://testdatacenter.aiwanshu.com/resServer/bookLending/lendBook",
+            // url: "http://172.16.6.133:8080/resServer/bookLending/lendBook",
+            url: `${_app.globalData.host}${_app.globalData.api.lendBook}`,
             data: {
                 bookId: e.currentTarget.dataset.bookId
             },
@@ -254,7 +233,6 @@ Page({
                         }
                     })
                 }
-
             }
         })
     }

@@ -1,6 +1,7 @@
 <view class="layout">
     <view class="banner-top"></view>
-    <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">立即登录</button>
+    <!--<button class="login-btn" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">绑定邮箱</button>-->
+    <button class="login-btn" bindtap="toBindEmail">绑定邮箱</button>
     <view class="tip-title">
         爱阅家内部图书借阅
     </view>

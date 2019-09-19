@@ -1,2 +1,30 @@
-<!--pages/bindEmail/bindEmail.wxml-->
-<text>pages/bindEmail/bindEmail.wxml</text>
+<view class="layout">
+
+    <view class="mini-logo">
+
+    </view>
+
+    <view class="page-body">
+        <view class="page-section">
+            <view class="weui-cells__title">邮箱</view>
+            <view class="weui-cells weui-cells_after-title">
+                <view class="weui-cell weui-cell_input">
+                    <input class="weui-input" bindinput="setMailPrifix" placeholder="请输入邮箱前缀"/>@aerogia.com
+                </view>
+            </view>
+        </view>
+        <view class="page-section">
+            <view class="weui-cells__title">邮箱验证码</view>
+            <view class="weui-cells weui-cells_after-title">
+                <view class="weui-cell weui-cell_input">
+                    <input class="weui-input" bindinput="setMailCode" placeholder="请填写邮箱验证码"/>
+                    <button size="mini" bindtap="mailboxCapture" disabled="{{sendEmailBtnDisabled}}">{{sendEmailBtn}}</button>
+                </view>
+            </view>
+        </view>
+        <button type="primary" bindtap="bindMail" class="regist-btn" disabled="{{submitBtnDisabled}}">注册</button>
+
+    </view>
+
+
+</view>

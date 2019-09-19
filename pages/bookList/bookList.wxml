@@ -1,7 +1,7 @@
 <view class="layout">
     <view class="r-title">
         <text>读万卷书行万里路</text>
-<!--        <view class="r-title-r">所有图书</view>-->
+        <!--        <view class="r-title-r">所有图书</view>-->
     </view>
     <view class="r-label">
         所有图书
@@ -12,10 +12,15 @@
                 <image src="{{qiniuDomain + item.BOOK_IMG_KEY}}" mode="aspectFit"></image>
             </view>
             <view class="r-l-i-msg">
-                <view class="r-l-i-name">{{item.BOOK_NAME}}</view>
-                <!--                <view class="r-l-i-author">{{item.}}</view>-->
-                <view class="r-l-i-time">书本总数：{{item.BOOK_TOTAL ? item.BOOK_TOTAL : 0}}</view>
-                <view class="r-l-i-time">当前库存：{{item.BOOK_AVAILABLE ? item.BOOK_AVAILABLE : 0}}</view>
+                <view class="r-l-i-name">
+                    {{item.BOOK_NAME}}
+                </view>
+                <!--<view class="r-l-i-author">{{item.}}</view>-->
+                <!--<view class="r-l-i-time">书本总数：{{item.BOOK_TOTAL ? item.BOOK_TOTAL : 0}}</view>-->
+                <!--<view class="r-l-i-time">当前库存：{{item.BOOK_AVAILABLE ? item.BOOK_AVAILABLE : 0}}</view>-->
+                <!--<view class="r-l-i-label" wx:if="{{item.BOOK_TAGS}}">{{item.BOOK_TAGS}}</view>-->
+
+                <view class="r-l-i-btn">我要借书</view>
             </view>
         </view>
         <view class="getMore" wx:if="{{!lastPage && bookList.length !== 0}}">

@@ -36,14 +36,13 @@
             <view class="e-c-i-label">管理图书</view>
             <view class="e-c-i-svg e-c-i-svg-manage"></view>
         </view>
+        <!--        <view class="e-check-item" bindtap="redirectPage" data-url="../catalog/catalog">-->
+        <!--            <view class="e-c-i-load">图书目录</view>-->
+        <!--        </view>-->
         <!--        <view class="e-check-item e-check-disable">-->
         <!--            <view class="e-c-i-load">敬请期待</view>-->
         <!--        </view>-->
     </view>
-<!--    <view>-->
-        <!--        <button size="mini" bindtap="getLoginCode">获取login code</button>-->
-<!--        <button size="mini" bindtap="aaaaa">aaaa</button>-->
-<!--    </view>-->
 </view>
 
 
